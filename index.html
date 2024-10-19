@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iris Flower Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Iris Flower Species Prediction</h1>
+    
+    <label for="sepal_length">Sepal Length (cm):</label>
+    <input type="number" id="sepal_length" step="0.1"><br>
+
+    <label for="sepal_width">Sepal Width (cm):</label>
+    <input type="number" id="sepal_width" step="0.1"><br>
+
+    <label for="petal_length">Petal Length (cm):</label>
+    <input type="number" id="petal_length" step="0.1"><br>
+
+    <label for="petal_width">Petal Width (cm):</label>
+    <input type="number" id="petal_width" step="0.1"><br>
+
+    <button id="predictButton">Predict Species</button>
+
+    <h2 id="result"></h2>
+
+    <script>
+        document.getElementById('predictButton').addEventListener('click', function() {
+            const sepalLength = parseFloat(document.getElementById('sepal_length').value);
+            const sepalWidth = parseFloat(document.getElementById('sepal_width').value);
+            const petalLength = parseFloat(document.getElementById('petal_length').value);
+            const petalWidth = parseFloat(document.getElementById('petal_width').value);
+
+            const data = {
+                sepal_length: sepalLength,
+                sepal_width: sepalWidth,
+                petal_length: petalLength,
+                petal_width: petalWidth
+            };
+
+            fetch('http://192.168.16.104:5001/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerText = 'Predicted Species: ' + data.species;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('result').innerText = 'Error predicting species';
+            });
+        });
+    </script>
+</body>
+</html>
